@@ -3,21 +3,29 @@ import { produce } from "immer";
 
 function App() {
   const [game, setGame] = useState({
-    name: "Pepperoni",
-    toppings: ['Cheese']
+    discount: 0.1,
+    items: [
+      { id: 1, title: "Product 1", quantity: 1 },
+      { id: 2, title: "Product 2", quantity: 1 },
+    ],
   });
 
   let handleClick = () => {
     setGame(
       produce((draft) => {
-        draft.toppings.push("Pepperoni")
+        let item = draft.items.find((item) => item.id === 1);
+        item.quantity--;
       })
     );
   };
 
   return (
     <>
-      {game.toppings.map((topping=> <li key={topping}>{topping}</li>))}
+      {game.items.map((item) => (
+        <li key={item.id}>
+          {item.title}-{item.quantity}
+        </li>
+      ))}
       <button onClick={handleClick}>click me</button>
     </>
   );
