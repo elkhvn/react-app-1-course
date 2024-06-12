@@ -1,32 +1,22 @@
-import { useState } from "react";
-import { produce } from "immer";
+import ExpandableText from "./components/ExpandableText";
 
 function App() {
-  const [game, setGame] = useState({
-    discount: 0.1,
-    items: [
-      { id: 1, title: "Product 1", quantity: 1 },
-      { id: 2, title: "Product 2", quantity: 1 },
-    ],
-  });
-
-  let handleClick = () => {
-    setGame(
-      produce((draft) => {
-        let item = draft.items.find((item) => item.id === 1);
-        item.quantity--;
-      })
-    );
-  };
-
   return (
     <>
-      {game.items.map((item) => (
-        <li key={item.id}>
-          {item.title}-{item.quantity}
-        </li>
-      ))}
-      <button onClick={handleClick}>click me</button>
+      <ExpandableText>
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laborum,
+        cumque obcaecati voluptate asperiores exercitationem expedita! Fugiat ab
+        corporis voluptatum quas id architecto nulla sunt, distinctio molestias
+        delectus maiores. Inventore error aperiam veniam molestias? Consequatur
+        nulla tenetur ipsam maxime velit praesentium voluptates, odio quod
+        reprehenderit quis dignissimos mollitia quidem dicta cum molestias
+        maiores, voluptatum eius. Est aspernatur corporis cum veniam eveniet
+        earum facilis voluptatum iusto ea! Optio consequatur voluptatum
+        consequuntur fuga pariatur est voluptate reprehenderit? Provident
+        tempora, reiciendis inventore repellat minima magni harum quibusdam ad
+        pariatur? Quo accusantium quibusdam temporibus facilis assumenda. Qui,
+        voluptates vel. Quaerat saepe quidem accusantium ex veritatis?
+      </ExpandableText>
     </>
   );
 }
