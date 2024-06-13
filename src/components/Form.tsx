@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 
 const Form = () => {
-  const [isPerson, SetPerson] = useState({ name: "", age: 0 });
+  const [isPerson, SetPerson] = useState({ name: "", age: "" });
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -14,6 +14,7 @@ const Form = () => {
           Name
         </label>
         <input
+          value={isPerson.name}
           onChange={(event) =>
             SetPerson({ ...isPerson, name: event.target.value })
           }
@@ -26,6 +27,7 @@ const Form = () => {
             Age
           </label>
           <input
+            value={isPerson.age}
             onChange={(event) =>
               SetPerson({ ...isPerson, age: parseInt(event.target.value) })
             }
