@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError, CanceledError } from "axios";
+
+import apiClient,  {CanceledError, AxiosError}; from "./services/api-client";  
 
 interface User {
   id: number;
@@ -19,8 +20,8 @@ function App() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const res = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users",
+        const res = await apiClient.get<User[]>(
+          "/users",
           { signal: controller.signal }
         );
         setUsers(res.data);
@@ -41,8 +42,8 @@ function App() {
     setUsers(users.filter((u) => u.id !== user.id));
 
     try {
-      await axios.delete(
-        "https://jsonplaceholder.typicode.com/users" + user.id
+      await apiClient.delete(
+        "/users" + user.id
       );
     } catch (err) {
       setError((err as AxiosError).message);
@@ -58,8 +59,8 @@ function App() {
 
     try {
       // Assigning an alias to a destructured property
-      const { data: savedUser } = await axios.post(
-        "https://jsonplaceholder.typicode.com/users",
+      const { data: savedUser } = await apiClient.post(
+        "users",
         newUser
       );
 
@@ -77,8 +78,8 @@ function App() {
     setUsers(users.map((u) => (u.id === user.id ? updateUser : u)));
 
     try {
-      await axios.patch(
-        "https://jsonplaceholder.typicode.com/users/" + user.id,
+      await apiClient.patch(
+        "/users/" + user.id,
         updateUser
       );
     } catch (err) {
