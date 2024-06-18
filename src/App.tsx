@@ -18,7 +18,11 @@ function App() {
 
   return (
     <div>
-      <ExpenseForm onSubmit={(data) => console.log(data)}></ExpenseForm>
+      <ExpenseForm
+        onSubmit={(expense) =>
+          setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
+        }
+      ></ExpenseForm>
       <ExpenseFilter
         onSelectCategory={(category) => setSelectedCategory(category)}
       ></ExpenseFilter>
