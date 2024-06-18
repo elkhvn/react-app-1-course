@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import apiClient,  {CanceledError, AxiosError}; from "./services/api-client";  
+import apiClient, { CanceledError, AxiosError } from "./services/api-client";
 
 interface User {
   id: number;
@@ -20,10 +20,9 @@ function App() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const res = await apiClient.get<User[]>(
-          "/users",
-          { signal: controller.signal }
-        );
+        const res = await apiClient.get<User[]>("/users", {
+          signal: controller.signal,
+        });
         setUsers(res.data);
       } catch (err) {
         if (err instanceof CanceledError) return;
@@ -42,9 +41,7 @@ function App() {
     setUsers(users.filter((u) => u.id !== user.id));
 
     try {
-      await apiClient.delete(
-        "/users" + user.id
-      );
+      await apiClient.delete("/users" + user.id);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
@@ -59,10 +56,7 @@ function App() {
 
     try {
       // Assigning an alias to a destructured property
-      const { data: savedUser } = await apiClient.post(
-        "users",
-        newUser
-      );
+      const { data: savedUser } = await apiClient.post("users", newUser);
 
       setUsers([savedUser, ...users]);
     } catch (err) {
@@ -78,10 +72,7 @@ function App() {
     setUsers(users.map((u) => (u.id === user.id ? updateUser : u)));
 
     try {
-      await apiClient.patch(
-        "/users/" + user.id,
-        updateUser
-      );
+      await apiClient.patch("/users/" + user.id, updateUser);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
