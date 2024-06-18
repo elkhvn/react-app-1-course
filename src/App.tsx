@@ -42,7 +42,7 @@ function App() {
 
     try {
       await axios.delete(
-        "https://jsonplaceholder.typicode.com/xusers" + user.id
+        "https://jsonplaceholder.typicode.com/users" + user.id
       );
     } catch (err) {
       setError((err as AxiosError).message);
@@ -59,7 +59,7 @@ function App() {
     try {
       // Assigning an alias to a destructured property
       const { data: savedUser } = await axios.post(
-        "https://jsonplaceholder.typicode.com/xusers",
+        "https://jsonplaceholder.typicode.com/users",
         newUser
       );
 
@@ -70,14 +70,31 @@ function App() {
     }
   };
 
+  const updateUser = async (user: User) => {
+    const originalUsers = [...users];
+
+    const updateUser = { ...user, name: user.name + "!" };
+    setUsers(users.map((u) => (u.id === user.id ? updateUser : u)));
+
+    try {
+      await axios.patch(
+        "https://jsonplaceholder.typicode.com/users/" + user.id,
+        updateUser
+      );
+    } catch (err) {
+      setError((err as AxiosError).message);
+      setUsers(originalUsers);
+    }
+  };
+
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && <div className="spinner-border"></div>}
-
       <button className="btn btn-primary mb-3" onClick={addUser}>
         Add User
       </button>
+
       <ul className="list-group">
         {users.map((user) => (
           <li
@@ -85,12 +102,20 @@ function App() {
             className="list-group-item d-flex justify-content-between"
           >
             {user.name}
-            <button
-              onClick={() => deleteUser(user)}
-              className="btn btn-outline-danger"
-            >
-              Delete
-            </button>
+            <div className="mb-3">
+              <button
+                className="btn btn-outline-secondary mb-3 mx-1"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                onClick={() => deleteUser(user)}
+                className="btn btn-outline-danger mb-3"
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
