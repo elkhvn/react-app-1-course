@@ -11,10 +11,13 @@ function App() {
 
   const [error, setError] = useState("");
 
+  const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const res = await axios.get<User[]>(
           "https://jsonplaceholder.typicode.com/users",
@@ -24,6 +27,8 @@ function App() {
       } catch (err) {
         if (err instanceof CanceledError) return;
         setError((err as AxiosError).message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -33,6 +38,7 @@ function App() {
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
       <ul>
         {users.map((user) => (
           <li key={user.id}>{user.name}</li>
