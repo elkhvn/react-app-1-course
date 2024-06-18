@@ -41,7 +41,7 @@ function App() {
     setUsers(users.filter((u) => u.id !== user.id));
 
     try {
-      await apiClient.delete("/users" + user.id);
+      await apiClient.delete("/users/" + user.id);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
