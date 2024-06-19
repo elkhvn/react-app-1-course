@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 
 import apiClient, { CanceledError, AxiosError } from "./services/api-client";
-
-interface User {
-  id: number;
-  name: string;
-}
+import userService, { User } from "./services/userService";
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,54 +11,46 @@ function App() {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const res = await apiClient.get<User[]>("/users", {
-          signal: controller.signal,
-        });
+    setLoading(true);
+    const { request, cancel } = userService.getAllUsers();
+    request
+      .then((res) => {
         setUsers(res.data);
-      } catch (err) {
+      })
+      .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError((err as AxiosError).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
+        setError(err.message);
+      })
+      .finally(() => setLoading(false));
 
-    return () => controller.abort();
+    return () => cancel();
   }, []);
 
   const deleteUser = async (user: User) => {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
 
-    try {
-      await apiClient.delete("/users/" + user.id);
-    } catch (err) {
-      setError((err as AxiosError).message);
+    const request = userService.deleteUser(user);
+    request.catch((err) => {
+      setError(err.message);
       setUsers(originalUsers);
-    }
+    });
   };
 
   const addUser = async () => {
     const newUser = { id: 0, name: "Mosh" };
-
     const originalUsers = [...users];
     setUsers([...users, newUser]);
 
-    try {
-      // Assigning an alias to a destructured property
-      const { data: savedUser } = await apiClient.post("users", newUser);
-
-      setUsers([savedUser, ...users]);
-    } catch (err) {
-      setError((err as AxiosError).message);
-      setUsers(originalUsers);
-    }
+    const request = userService.addUser(newUser);
+    request
+      .then((res) => {
+        setUsers([...users, res.data]);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
   };
 
   const updateUser = async (user: User) => {
@@ -71,12 +59,11 @@ function App() {
     const updateUser = { ...user, name: user.name + "!" };
     setUsers(users.map((u) => (u.id === user.id ? updateUser : u)));
 
-    try {
-      await apiClient.patch("/users/" + user.id, updateUser);
-    } catch (err) {
-      setError((err as AxiosError).message);
+    const request = userService.updateUser(user, updateUser);
+    request.catch(err => {
+      setError(err.message);
       setUsers(originalUsers);
-    }
+    })
   };
 
   return (
