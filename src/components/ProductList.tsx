@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ProductList = ({ category }: { category: string }) => {
   const [products, setProducts] = useState<string[]>([]);
