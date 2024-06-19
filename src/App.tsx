@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import apiClient, { CanceledError, AxiosError } from "./services/api-client";
+import { CanceledError } from "./services/api-client";
 import userService, { User } from "./services/userService";
 
 function App() {
@@ -59,7 +59,7 @@ function App() {
     const updateUser = { ...user, name: user.name + "!" };
     setUsers(users.map((u) => (u.id === user.id ? updateUser : u)));
 
-    const request = userService.updateUser(user, updateUser);
+    const request = userService.updateUser(updateUser);
     request.catch(err => {
       setError(err.message);
       setUsers(originalUsers);

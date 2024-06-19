@@ -31,8 +31,8 @@ class userService{
         return request
     }
 
-    updateUser(user: User, updateUser: User){
-        const request = apiClient.patch("/users/" + user.id, updateUser);
+    updateUser(user: User){
+        const request = apiClient.patch("/users/" + user.id, user);
 
         return request
     }
